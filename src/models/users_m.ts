@@ -8,8 +8,8 @@ const { BCRYPT_PASSWORD, SALT_ROUND } = process.env;
 
 export type userMod = {
   id: number;
-  user_name: string;
-  e_mail: string;
+  first_name: string;
+  last_name: string;
   password: string;
 };
 
@@ -18,17 +18,21 @@ export class Users {
   async create(u: userMod): Promise<userMod> {
     try {
       const connection = await client.connect(); // Create a new connection to the database
-      const sql = `INSERT INTO users (user_name, e_mail, password) VALUES ($1, $2, $3) RETURNING *`; // Create a sql cmd (query)
+      const sql = `INSERT INTO users (first_name, last_name, password) VALUES ($1, $2, $3) RETURNING *`; // Create a sql cmd (query)
       const hash = bcrypt.hashSync(
         u.password + BCRYPT_PASSWORD,
         parseInt(SALT_ROUND as string)
       );
-      const result = await connection.query(sql, [u.user_name, u.e_mail, hash]); // Execute the query
+      const result = await connection.query(sql, [
+        u.first_name,
+        u.last_name,
+        hash,
+      ]); // Execute the query
       connection.release(); // Release the connection
       return result.rows[0]; // Return the results
     } catch (error) {
       throw new Error(
-        `New user => ${u.user_name}, can not be created. ${error}`
+        `New user => ${u.first_name}, can not be created. ${error}`
       );
     }
   }
@@ -77,14 +81,14 @@ export class Users {
   async up_user(u: userMod): Promise<userMod> {
     try {
       const connection = await client.connect();
-      const sql = `UPDATE users SET user_name = ($1), e_mail = ($2), password = ($3) WHERE id = ($4) RETURNING *`;
+      const sql = `UPDATE users SET first_name = ($1), last_name = ($2), password = ($3) WHERE id = ($4) RETURNING *`;
       const hash = bcrypt.hashSync(
         u.password + BCRYPT_PASSWORD,
         parseInt(SALT_ROUND as string)
       );
       const result = await connection.query(sql, [
-        u.user_name,
-        u.e_mail,
+        u.first_name,
+        u.last_name,
         hash,
         u.id,
       ]);
@@ -99,8 +103,8 @@ export class Users {
   async authenticate(u: userMod): Promise<userMod | null> {
     try {
       const connection = await client.connect();
-      const sql = `SELECT * FROM users WHERE user_name = ($1)`;
-      const result = await connection.query(sql, [u.user_name]);
+      const sql = `SELECT * FROM users WHERE first_name = ($1)`;
+      const result = await connection.query(sql, [u.first_name]);
       if (result.rows.length) {
         console.log(result.rows[0]);
         const hased_password = result.rows[0].password;

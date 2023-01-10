@@ -20,7 +20,7 @@ const activity_check = async (
 
     const order = result.rows[0];
 
-    if (order.status === 'Inactive') {
+    if (order.status !== 'Active') {
       throw new Error(
         `Action can not be applied to order => ${order_id} as order status is ${order.status}`
       );

@@ -83,6 +83,7 @@ orders_router.patch(
 // Add product end point
 orders_router.post(
   '/:order_id/orders_products',
+  user_verifyAuthToken,
   activity_check,
   async (req: Request, res: Response) => {
     const order_id: string = req.params.order_id;
@@ -101,6 +102,7 @@ orders_router.post(
 // Delete product end point
 orders_router.delete(
   '/:order_id/orders_products/:op_id',
+  user_verifyAuthToken,
   activity_check,
   async (req: Request, res: Response) => {
     const order_id: string = req.params.order_id;
@@ -116,18 +118,23 @@ orders_router.delete(
 );
 
 // Show all orders' products and quantities end point
-orders_router.get('/orders_products', async (req: Request, res: Response) => {
-  try {
-    const order_product = await orders.s_all_op();
-    res.json(order_product);
-  } catch (error) {
-    res.status(400).send(`${error}`);
+orders_router.get(
+  '/orders_products',
+  user_verifyAuthToken,
+  async (req: Request, res: Response) => {
+    try {
+      const order_product = await orders.s_all_op();
+      res.json(order_product);
+    } catch (error) {
+      res.status(400).send(`${error}`);
+    }
   }
-});
+);
 
 // Show specific order's products and quantities
 orders_router.get(
   '/orders_products/:op_id',
+  user_verifyAuthToken,
   async (req: Request, res: Response) => {
     const op_id: string = req.params.op_id;
     try {
@@ -142,6 +149,7 @@ orders_router.get(
 // Update product quantities
 orders_router.patch(
   '/:order_id/orders_products/:op_id',
+  user_verifyAuthToken,
   activity_check,
   async (req: Request, res: Response) => {
     const order_id: string = req.params.order_id;

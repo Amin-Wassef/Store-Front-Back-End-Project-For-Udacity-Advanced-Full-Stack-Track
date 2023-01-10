@@ -1,0 +1,172 @@
+import client from '../database';
+
+export type orderMod = {
+  id: number;
+  user_id: number;
+  status: string;
+};
+
+export class Orders {
+  // Create new order
+  async create(o: orderMod): Promise<orderMod> {
+    try {
+      const connection = await client.connect();
+      const sql = `INSERT INTO orders (user_id, status) VALUES ($1, $2) RETURNING *`;
+      const result = await connection.query(sql, [o.user_id, o.status]);
+      connection.release();
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(`New order, can not be created. ${error}.`);
+    }
+  }
+
+  // Delete order
+  async delete(o: orderMod): Promise<orderMod> {
+    try {
+      const connection = await client.connect();
+      const sql = `DELETE FROM orders WHERE id=($1) RETURNING *`;
+      const result = await connection.query(sql, [o.id]);
+      connection.release();
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(`Order => ${o.id}, can not be deleted. ${error}.`);
+    }
+  }
+
+  // Show all orders data
+  async s_all(): Promise<orderMod[]> {
+    try {
+      const connection = await client.connect();
+      const sql = `SELECT * FROM orders ORDER BY id ASC`;
+      const result = await connection.query(sql);
+      connection.release();
+      return result.rows;
+    } catch (error) {
+      throw new Error(`Orders data can not be shown. ${error}.`);
+    }
+  }
+
+  // Sow specific order data
+  async s_one(o: orderMod): Promise<orderMod> {
+    try {
+      const connection = await client.connect();
+      const sql = `SELECT * FROM products WHERE id = ($1)`;
+      const result = await connection.query(sql, [o.id]);
+      connection.release();
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(`Order => ${o.id} data can not be shown. ${error}.`);
+    }
+  }
+
+  // Update order's status
+  async up_status(o: orderMod): Promise<orderMod> {
+    try {
+      const connection = await client.connect();
+      const sql = `UPDATE orders SET status = ($1) WHERE id = ($2) RETURNING *`;
+      const result = await connection.query(sql, [o.status, o.id]);
+      connection.release();
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(`Order => ${o.id}, can not be updated. ${error}.`);
+    }
+  }
+
+  // Add product
+  async add_pdt(
+    order_id: string,
+    pdt_id: number,
+    quantity: number,
+    _op_id?: string
+  ): Promise<orderMod> {
+    try {
+      const connection = await client.connect();
+      const sql =
+        'INSERT INTO orders_products (order_id, pdt_id, quantity) VALUES($1, $2, $3) RETURNING *';
+      const result = await connection.query(sql, [order_id, pdt_id, quantity]);
+      connection.release();
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(
+        `Product => ${pdt_id} can not be added to order => ${order_id}. ${error}`
+      );
+    }
+  }
+
+  // Delete product
+  async delete_pdt(
+    op_id: string,
+    _order_id?: string,
+    _pdt_id?: number,
+    _quantity?: number
+  ): Promise<orderMod> {
+    try {
+      const connection = await client.connect();
+      const sql = 'DELETE FROM orders_products WHERE id = ($1) RETURNING *';
+      const result = await connection.query(sql, [op_id]);
+      connection.release();
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(`Product can not be deleted. ${error}`);
+    }
+  }
+
+  // Show all orders' products and quantities
+  async s_all_op(
+    _op_id?: string,
+    _order_id?: string,
+    _pdt_id?: number,
+    _quantity?: number
+  ): Promise<orderMod[]> {
+    try {
+      const connection = await client.connect();
+      const sql = 'SELECT * FROM orders_products';
+      const result = await connection.query(sql);
+      connection.release();
+      return result.rows;
+    } catch (error) {
+      throw new Error(`Orders' products can not be shown. ${error}`);
+    }
+  }
+
+  // Show specific order's products and quantities
+  async s_one_op(
+    op_id: string,
+    _order_id?: string,
+    _pdt_id?: number,
+    _quantity?: number
+  ): Promise<orderMod> {
+    try {
+      const connection = await client.connect();
+      const sql = 'SELECT * FROM orders_products WHERE id = ($1)';
+      const result = await connection.query(sql, [op_id]);
+      if (!result.rows.length) {
+        throw new Error(`${op_id} does not exist`);
+      }
+      connection.release();
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(`Order can not be shown. ${error}`);
+    }
+  }
+
+  // Update product quantities
+  async up_pdt_q(
+    quantity: number,
+    op_id: string,
+    _order_id?: string,
+    pdt_id?: number
+  ): Promise<orderMod> {
+    try {
+      const connection = await client.connect();
+      const sql = `UPDATE orders_products SET quantity = ($1) WHERE id = ($2) RETURNING *`;
+      const result = await connection.query(sql, [quantity, op_id]);
+      connection.release();
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(
+        `Product => ${pdt_id} quantity can not be updated. ${error}`
+      );
+    }
+  }
+}

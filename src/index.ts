@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
-import products_router from './routes/products_r';
-import users_router from './routes/usres_r';
-import orders_router from './routes/orders_r';
+import users_router from './routes_handlers/usres_r_h';
+import products_router from './routes_handlers/products_r_h';
+import orders_router from './routes_handlers/orders_r_h';
 
 // Server instantiation
 const app = express();
@@ -21,10 +21,10 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use(express.json());
 
-app.use('/users', users_router);
+users_router(app);
 
-app.use('/products', products_router);
+products_router(app);
 
-app.use('/orders', orders_router);
+orders_router(app);
 
 export default app;

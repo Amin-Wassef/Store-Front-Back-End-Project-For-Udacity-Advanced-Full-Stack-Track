@@ -1,9 +1,9 @@
 import client from '../database';
 
 export type productMod = {
-  id: number;
-  pdt_name: string;
-  pdt_price: string;
+  id: string;
+  pdt_name?: string;
+  pdt_price?: string;
 };
 
 export class Products {

@@ -1,14 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import client from '../../database';
 
-const activity_check = async (
+const presence_activity_check = async (
   req: Request,
   _res: Response,
   next: NextFunction
 ): Promise<void> => {
   const order_id = req.params.order_id;
-  const pdt_id = req.params.pdt_id;
-  const quantity = req.body.quantity;
+  // const pdt_id = req.params.pdt_id;
+  // const quantity = req.body.quantity;
 
   try {
     const connection = await client.connect();
@@ -18,11 +18,11 @@ const activity_check = async (
     if (!result.rows.length)
       throw new Error(`Order => ${order_id} doesn't exist.`);
 
-    const order = result.rows[0];
+    const status = result.rows[0].status;
 
-    if (order.status !== 'Active') {
+    if (status !== 'Active') {
       throw new Error(
-        `Action can not be applied to order => ${order_id} as order status is ${order.status}`
+        `Action can not be applied to order => ${order_id} as order status is ${status}`
       );
     }
 
@@ -33,4 +33,4 @@ const activity_check = async (
   }
 };
 
-export default activity_check;
+export default presence_activity_check;

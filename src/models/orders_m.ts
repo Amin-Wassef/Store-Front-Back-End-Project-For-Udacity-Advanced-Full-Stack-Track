@@ -1,9 +1,9 @@
 import client from '../database';
 
 export type orderMod = {
-  id: number;
-  user_id: number;
-  status: string;
+  id?: string;
+  user_id?: number;
+  status?: string;
 };
 
 export class Orders {
@@ -12,7 +12,7 @@ export class Orders {
     try {
       const connection = await client.connect();
       const sql = `INSERT INTO orders (user_id, status) VALUES ($1, $2) RETURNING *`;
-      const result = await connection.query(sql, [o.user_id, o.status]);
+      const result = await connection.query(sql, [o.id, o.status]);
       connection.release();
       return result.rows[0];
     } catch (error) {
@@ -24,8 +24,8 @@ export class Orders {
   async delete(o: orderMod): Promise<orderMod> {
     try {
       const connection = await client.connect();
-      const sql = `DELETE FROM orders WHERE id=($1) RETURNING *`;
-      const result = await connection.query(sql, [o.id]);
+      const sql = `DELETE FROM orders WHERE id=($1) AND user_id = ($2) RETURNING *`;
+      const result = await connection.query(sql, [o.id, o.user_id]);
       connection.release();
       return result.rows[0];
     } catch (error) {
@@ -46,12 +46,12 @@ export class Orders {
     }
   }
 
-  // Sow specific order data
+  // Show specific order's data
   async s_one(o: orderMod): Promise<orderMod> {
     try {
       const connection = await client.connect();
-      const sql = `SELECT * FROM products WHERE id = ($1)`;
-      const result = await connection.query(sql, [o.id]);
+      const sql = `SELECT * FROM orders WHERE id = ($1) AND user_id = ($2)`;
+      const result = await connection.query(sql, [o.id, o.user_id]);
       connection.release();
       return result.rows[0];
     } catch (error) {
@@ -63,8 +63,8 @@ export class Orders {
   async up_status(o: orderMod): Promise<orderMod> {
     try {
       const connection = await client.connect();
-      const sql = `UPDATE orders SET status = ($1) WHERE id = ($2) RETURNING *`;
-      const result = await connection.query(sql, [o.status, o.id]);
+      const sql = `UPDATE orders SET status = ($1) WHERE id = ($2) AND user_id = ($3) RETURNING *`;
+      const result = await connection.query(sql, [o.status, o.id, o.user_id]);
       connection.release();
       return result.rows[0];
     } catch (error) {
@@ -96,14 +96,15 @@ export class Orders {
   // Delete product
   async delete_pdt(
     op_id: string,
-    _order_id?: string,
+    order_id: string,
     _pdt_id?: number,
     _quantity?: number
   ): Promise<orderMod> {
     try {
       const connection = await client.connect();
-      const sql = 'DELETE FROM orders_products WHERE id = ($1) RETURNING *';
-      const result = await connection.query(sql, [op_id]);
+      const sql =
+        'DELETE FROM orders_products WHERE id = ($1) AND order_id = ($2) RETURNING *';
+      const result = await connection.query(sql, [op_id, order_id]);
       connection.release();
       return result.rows[0];
     } catch (error) {
@@ -120,7 +121,7 @@ export class Orders {
   ): Promise<orderMod[]> {
     try {
       const connection = await client.connect();
-      const sql = 'SELECT * FROM orders_products';
+      const sql = 'SELECT * FROM orders_products ORDER BY order_id ASC';
       const result = await connection.query(sql);
       connection.release();
       return result.rows;
@@ -132,14 +133,15 @@ export class Orders {
   // Show specific order's products and quantities
   async s_one_op(
     op_id: string,
-    _order_id?: string,
+    order_id: string,
     _pdt_id?: number,
     _quantity?: number
   ): Promise<orderMod> {
     try {
       const connection = await client.connect();
-      const sql = 'SELECT * FROM orders_products WHERE id = ($1)';
-      const result = await connection.query(sql, [op_id]);
+      const sql =
+        'SELECT * FROM orders_products WHERE id = ($1)) AND order_id = ($2)';
+      const result = await connection.query(sql, [op_id, order_id]);
       if (!result.rows.length) {
         throw new Error(`${op_id} does not exist`);
       }
@@ -154,13 +156,13 @@ export class Orders {
   async up_pdt_q(
     quantity: number,
     op_id: string,
-    _order_id?: string,
+    order_id: string,
     pdt_id?: number
   ): Promise<orderMod> {
     try {
       const connection = await client.connect();
-      const sql = `UPDATE orders_products SET quantity = ($1) WHERE id = ($2) RETURNING *`;
-      const result = await connection.query(sql, [quantity, op_id]);
+      const sql = `UPDATE orders_products SET quantity = ($1) WHERE id = ($2) AND order_id = ($3) RETURNING *`;
+      const result = await connection.query(sql, [quantity, op_id, order_id]);
       connection.release();
       return result.rows[0];
     } catch (error) {

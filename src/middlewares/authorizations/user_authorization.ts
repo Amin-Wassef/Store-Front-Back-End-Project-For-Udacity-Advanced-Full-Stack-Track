@@ -17,37 +17,37 @@ type payload = {
 };
 
 // For for a real app in real life
-// export const user_verifyAuthToken = (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ): void => {
-//   try {
-//     const authorizationHeader = req.headers.authorization as unknown as string;
-//     const token = authorizationHeader.split(' ')[1];
-//     const decoded = jwt.verify(token, TOKEN_SECRET as unknown as string);
-//     console.log(decoded);
-//     if (decoded) next();
-//   } catch (error) {
-//     res.status(401);
-//   }
-// };
-
-// For testing purpose (using token in the body)
 export const user_verifyAuthToken = (
   req: Request,
   res: Response,
   next: NextFunction
 ): void => {
   try {
-    const token = req.body.token;
-    const decoded = jwt.verify(
-      token,
-      TOKEN_SECRET as unknown as string
-    ) as unknown as payload;
+    const authorizationHeader = req.headers.authorization as unknown as string;
+    const token = authorizationHeader.split(' ')[1];
+    const decoded = jwt.verify(token, TOKEN_SECRET as unknown as string);
     console.log(decoded);
     if (decoded) next();
   } catch (error) {
-    res.status(401);
+    res.status(401).send(`You are not authorized to this action`);
   }
 };
+
+// For testing purpose (using token in the body)
+// export const user_verifyAuthToken = (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ): void => {
+//   try {
+//     const token = req.body.token;
+//     const decoded = jwt.verify(
+//       token,
+//       TOKEN_SECRET as unknown as string
+//     ) as unknown as payload;
+//     console.log(decoded);
+//     if (decoded) next();
+//   } catch (error) {
+//     res.status(401).send(`You are not authorized to this action`);
+//   }
+// };

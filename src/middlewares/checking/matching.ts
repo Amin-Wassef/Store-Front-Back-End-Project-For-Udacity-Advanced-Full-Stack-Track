@@ -13,13 +13,14 @@ const matching_check = async (
     const connection = await client.connect();
     const sql = 'SELECT * FROM orders WHERE id=($1)';
     const result = await connection.query(sql, [order_id]);
-
+    console.log(result.rows[0]);
     const user_id = result.rows[0].user_id;
+    console.log(user_id);
+    console.log(id);
 
-    if (user_id !== id) {
-      throw new Error(`You are not allowed to act on this order`);
+    if (user_id != id) {
+      throw new Error(`You are not allowed to act to this order`);
     }
-
     connection.release();
     next();
   } catch (error) {

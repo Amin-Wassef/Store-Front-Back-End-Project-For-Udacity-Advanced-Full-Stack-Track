@@ -22,19 +22,6 @@ export class Products {
     }
   }
 
-  // Delete product
-  async delete(p: productMod): Promise<productMod> {
-    try {
-      const connection = await client.connect();
-      const sql = `DELETE FROM products WHERE id=($1) RETURNING *`;
-      const result = await connection.query(sql, [p.id]);
-      connection.release();
-      return result.rows[0];
-    } catch (error) {
-      throw new Error(`Product => ${p.id}, can not be deleted. ${error}.`);
-    }
-  }
-
   // Show all products data
   async s_all(): Promise<productMod[]> {
     try {
@@ -75,6 +62,19 @@ export class Products {
       return result.rows[0];
     } catch (error) {
       throw new Error(`Product => ${p.id}, can not be updated. ${error}.`);
+    }
+  }
+
+  // Delete product
+  async delete(p: productMod): Promise<productMod> {
+    try {
+      const connection = await client.connect();
+      const sql = `DELETE FROM products WHERE id=($1) RETURNING *`;
+      const result = await connection.query(sql, [p.id]);
+      connection.release();
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(`Product => ${p.id}, can not be deleted. ${error}.`);
     }
   }
 }

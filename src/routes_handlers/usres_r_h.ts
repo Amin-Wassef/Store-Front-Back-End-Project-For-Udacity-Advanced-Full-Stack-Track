@@ -24,20 +24,6 @@ const create_u = async (req: Request, res: Response) => {
   }
 };
 
-// Delete user end point
-const delete_u = async (req: Request, res: Response) => {
-  const data: userMod = {
-    id: req.params.id,
-    password: req.body.password,
-  };
-  try {
-    const user = await users.delete(data);
-    res.json(user);
-  } catch (error) {
-    res.status(400).send(`${error}`);
-  }
-};
-
 // Show all users data end point
 const s_all_u = async (req: Request, res: Response) => {
   try {
@@ -78,6 +64,20 @@ const up_u = async (req: Request, res: Response) => {
   }
 };
 
+// Delete user end point
+const delete_u = async (req: Request, res: Response) => {
+  const data: userMod = {
+    id: req.params.id,
+    password: req.body.password,
+  };
+  try {
+    const user = await users.delete(data);
+    res.json(user);
+  } catch (error) {
+    res.status(400).send(`${error}`);
+  }
+};
+
 // Password authentication
 const auth_u = async (req: Request, res: Response) => {
   try {
@@ -91,10 +91,10 @@ const auth_u = async (req: Request, res: Response) => {
 
 const users_router = (app: express.Application) => {
   app.post('/users', create_u);
-  app.delete('/users/:id', super_admin_verifyAuthToken, delete_u);
   app.get('/users', super_admin_verifyAuthToken, s_all_u);
   app.get('/users/:id', user_super_admin_authorization, s_one_u);
   app.patch('/users/:id', user_super_admin_authorization, up_u);
+  app.delete('/users/:id', super_admin_verifyAuthToken, delete_u);
   app.post('/users/authenticate', auth_u);
 };
 

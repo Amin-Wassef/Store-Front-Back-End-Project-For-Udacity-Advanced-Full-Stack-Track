@@ -12,24 +12,11 @@ export class Orders {
     try {
       const connection = await client.connect();
       const sql = `INSERT INTO orders (user_id, status) VALUES ($1, $2) RETURNING *`;
-      const result = await connection.query(sql, [o.id, o.status]);
+      const result = await connection.query(sql, [o.user_id, o.status]);
       connection.release();
       return result.rows[0];
     } catch (error) {
       throw new Error(`New order, can not be created. ${error}.`);
-    }
-  }
-
-  // Delete order
-  async delete(o: orderMod): Promise<orderMod> {
-    try {
-      const connection = await client.connect();
-      const sql = `DELETE FROM orders WHERE id=($1) AND user_id = ($2) RETURNING *`;
-      const result = await connection.query(sql, [o.id, o.user_id]);
-      connection.release();
-      return result.rows[0];
-    } catch (error) {
-      throw new Error(`Order => ${o.id}, can not be deleted. ${error}.`);
     }
   }
 
@@ -72,6 +59,19 @@ export class Orders {
     }
   }
 
+  // Delete order
+  async delete(o: orderMod): Promise<orderMod> {
+    try {
+      const connection = await client.connect();
+      const sql = `DELETE FROM orders WHERE id=($1) AND user_id = ($2) RETURNING *`;
+      const result = await connection.query(sql, [o.id, o.user_id]);
+      connection.release();
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(`Order => ${o.id}, can not be deleted. ${error}.`);
+    }
+  }
+
   // Add product
   async add_pdt(
     order_id: string,
@@ -90,25 +90,6 @@ export class Orders {
       throw new Error(
         `Product => ${pdt_id} can not be added to order => ${order_id}. ${error}`
       );
-    }
-  }
-
-  // Delete product
-  async delete_pdt(
-    op_id: string,
-    order_id: string,
-    _pdt_id?: number,
-    _quantity?: number
-  ): Promise<orderMod> {
-    try {
-      const connection = await client.connect();
-      const sql =
-        'DELETE FROM orders_products WHERE id = ($1) AND order_id = ($2) RETURNING *';
-      const result = await connection.query(sql, [op_id, order_id]);
-      connection.release();
-      return result.rows[0];
-    } catch (error) {
-      throw new Error(`Product can not be deleted. ${error}`);
     }
   }
 
@@ -169,6 +150,25 @@ export class Orders {
       throw new Error(
         `Product => ${pdt_id} quantity can not be updated. ${error}`
       );
+    }
+  }
+
+  // Delete product
+  async delete_pdt(
+    op_id: string,
+    order_id: string,
+    _pdt_id?: number,
+    _quantity?: number
+  ): Promise<orderMod> {
+    try {
+      const connection = await client.connect();
+      const sql =
+        'DELETE FROM orders_products WHERE id = ($1) AND order_id = ($2) RETURNING *';
+      const result = await connection.query(sql, [op_id, order_id]);
+      connection.release();
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(`Product can not be deleted. ${error}`);
     }
   }
 }

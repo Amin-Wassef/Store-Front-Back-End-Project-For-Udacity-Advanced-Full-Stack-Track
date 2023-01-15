@@ -37,19 +37,6 @@ export class Users {
     }
   }
 
-  // Delete user
-  async delete(u: userMod): Promise<userMod> {
-    try {
-      const connection = await client.connect();
-      const sql = `DELETE FROM users WHERE id = ($1) RETURNING *`;
-      const result = await connection.query(sql, [u.id]);
-      connection.release();
-      return result.rows[0];
-    } catch (error) {
-      throw new Error(`User => ${u.id}, can not be deleted. ${error}.`);
-    }
-  }
-
   // Show all users data
   async s_all(): Promise<userMod[]> {
     try {
@@ -99,6 +86,19 @@ export class Users {
     }
   }
 
+  // Delete user
+  async delete(u: userMod): Promise<userMod> {
+    try {
+      const connection = await client.connect();
+      const sql = `DELETE FROM users WHERE id = ($1) RETURNING *`;
+      const result = await connection.query(sql, [u.id]);
+      connection.release();
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(`User => ${u.id}, can not be deleted. ${error}.`);
+    }
+  }
+
   // User authentication
   async authenticate(u: userMod): Promise<userMod | null> {
     try {
@@ -106,7 +106,7 @@ export class Users {
       const sql = `SELECT * FROM users WHERE first_name = ($1) AND last_name = ($2)`;
       const result = await connection.query(sql, [u.first_name, u.last_name]);
       if (result.rows.length) {
-        console.log(result.rows[0]);
+        // console.log(result.rows[0]);
         const hased_password = result.rows[0].password;
         if (bcrypt.compareSync(u.password + BCRYPT_PASSWORD, hased_password)) {
           return result.rows[0];

@@ -16,17 +16,6 @@ const create_p = async (req: Request, res: Response) => {
   }
 };
 
-// Delete product end point
-const delete_p = async (req: Request, res: Response) => {
-  const id: productMod = { id: req.params.id };
-  try {
-    const product = await products.delete(id);
-    res.json(product);
-  } catch (error) {
-    res.status(400).send(`${error}`);
-  }
-};
-
 // Show all products data end point
 const s_all_p = async (req: Request, res: Response) => {
   try {
@@ -63,12 +52,23 @@ const up_p = async (req: Request, res: Response) => {
   }
 };
 
+// Delete product end point
+const delete_p = async (req: Request, res: Response) => {
+  const id: productMod = { id: req.params.id };
+  try {
+    const product = await products.delete(id);
+    res.json(product);
+  } catch (error) {
+    res.status(400).send(`${error}`);
+  }
+};
+
 const products_router = (app: express.Application) => {
   app.post('/products', admin_super_admin_authorization, create_p);
-  app.delete('/products/:id', admin_super_admin_authorization, delete_p);
   app.get('/products', user_verifyAuthToken, s_all_p);
   app.get('/products/:id', user_verifyAuthToken, s_one_p);
   app.patch('/products/:id', admin_super_admin_authorization, up_p);
+  app.delete('/products/:id', admin_super_admin_authorization, delete_p);
 };
 
 export default products_router;

@@ -7,9 +7,7 @@ const presence_activity_check = async (
   next: NextFunction
 ): Promise<void> => {
   const order_id = req.params.order_id;
-  // const pdt_id = req.params.pdt_id;
-  // const quantity = req.body.quantity;
-
+  
   try {
     const connection = await client.connect();
     const sql = 'SELECT * FROM orders WHERE id=($1)';

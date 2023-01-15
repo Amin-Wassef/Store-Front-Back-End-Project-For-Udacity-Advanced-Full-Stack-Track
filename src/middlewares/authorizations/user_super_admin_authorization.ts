@@ -31,7 +31,12 @@ export const user_super_admin_authorization = (
     ) as unknown as payload;
     console.log(decoded.user.id);
     console.log(req.body.id);
-    if (decoded.user.id === parseInt(req.params.id) || decoded.user.id === req.body.id ||decoded.user.id === 1) next();
+    if (
+      decoded.user.id === parseInt(req.params.id) ||
+      decoded.user.id === req.body.id ||
+      decoded.user.id === 1
+    )
+      next();
   } catch (error) {
     res.status(401).send(`You are not authorized to this action`);
   }

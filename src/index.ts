@@ -16,7 +16,7 @@ app.listen(port, () => {
 });
 
 app.get('/', (req: Request, res: Response) => {
-  res.status(200).send('Main route is working');
+  res.status(200).send('Hello Baby Jesus .. Main route is working properly');
 });
 
 app.use(express.json());

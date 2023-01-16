@@ -7,7 +7,7 @@ dotenv.config();
 const { BCRYPT_PASSWORD, SALT_ROUND } = process.env;
 
 export type userMod = {
-  id: string;
+  id?: string;
   first_name?: string;
   last_name?: string;
   password: string;
@@ -44,6 +44,7 @@ export class Users {
       const sql = `SELECT * FROM users ORDER BY id ASC`;
       const result = await connection.query(sql);
       connection.release();
+      console.log(result.rows);
       return result.rows;
     } catch (error) {
       throw new Error(`Users data can not be shown. ${error}.`);
@@ -121,3 +122,6 @@ export class Users {
     }
   }
 }
+
+
+// "npx db-migrate reset --env test && set ENV = test && npx db-migrate up --env test && npm run build && jasmine && npx db-migrate reset --env test"

@@ -9,7 +9,7 @@
     "js": "node dist/index.js",
     "jasmine": "jasmine",
     "start": "npm run build && npm run js",
-    "test": "npx db-migrate reset --env test && set ENV=test && npx db-migrate up --env test && npm run build && jasmine && npx db-migrate reset --env test",
+    "test": "npx db-migrate reset --env test && set ENV=test&& npx db-migrate up --env test && npm run build && jasmine && npx db-migrate reset --env test",
     "prettier": "prettier --write src/**/*.ts",
     "lint": "eslint . --ext. ts"
   },

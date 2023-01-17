@@ -1,8 +1,8 @@
 import client from '../database';
 
 export type orderMod = {
-  id?: string;
-  user_id?: number;
+  id?: string | number;
+  user_id?: string | number;
   status?: string;
 };
 
@@ -74,10 +74,10 @@ export class Orders {
 
   // Add product
   async add_pdt(
-    order_id: string,
-    pdt_id: number,
-    quantity: number,
-    _op_id?: string
+    order_id: string | number,
+    pdt_id: string | number,
+    quantity: string | number,
+    _op_id?: string | number
   ): Promise<orderMod> {
     try {
       const connection = await client.connect();
@@ -95,10 +95,10 @@ export class Orders {
 
   // Show all orders' products and quantities
   async s_all_op(
-    _op_id?: string,
-    _order_id?: string,
-    _pdt_id?: number,
-    _quantity?: number
+    _op_id?: string | number,
+    _order_id?: string | number,
+    _pdt_id?: string | number,
+    _quantity?: string | number
   ): Promise<orderMod[]> {
     try {
       const connection = await client.connect();
@@ -113,10 +113,10 @@ export class Orders {
 
   // Show specific order's products and quantities
   async s_one_op(
-    op_id: string,
-    order_id: string,
-    _pdt_id?: number,
-    _quantity?: number
+    op_id: string | number,
+    order_id: string | number,
+    _pdt_id?: string | number,
+    _quantity?: string | number
   ): Promise<orderMod> {
     try {
       const connection = await client.connect();
@@ -135,10 +135,10 @@ export class Orders {
 
   // Update product quantities
   async up_pdt_q(
-    quantity: number,
-    op_id: string,
-    order_id: string,
-    pdt_id?: number
+    quantity: string | number,
+    op_id: string | number,
+    order_id: string | number,
+    pdt_id?: string | number
   ): Promise<orderMod> {
     try {
       const connection = await client.connect();
@@ -155,10 +155,10 @@ export class Orders {
 
   // Delete product
   async delete_pdt(
-    op_id: string,
-    order_id: string,
-    _pdt_id?: number,
-    _quantity?: number
+    op_id: string | number,
+    order_id: string | number,
+    _pdt_id?: string | number,
+    _quantity?: string | number
   ): Promise<orderMod> {
     try {
       const connection = await client.connect();

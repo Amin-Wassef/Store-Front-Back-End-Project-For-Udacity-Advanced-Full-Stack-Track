@@ -1,10 +1,9 @@
-import client from '../../database';
 import { userMod, Users } from '../../models/users_m';
 
 // Model instantiation
 const users = new Users();
 
-describe('User model testing', () => {
+describe('Users model testing', () => {
   describe('Functions existance', () => {
     it('"Authenticate" function should exists', () => {
       expect(users.authenticate).toBeDefined();
@@ -26,48 +25,83 @@ describe('User model testing', () => {
     });
   });
   describe('Fuctions act properly', () => {
+    let create_u: userMod;
+
     beforeAll(async () => {
-      const user_create = await users.create({
+      create_u = await users.create({
         first_name: 'Amin',
         last_name: 'Wassef',
         password: 'qwe',
       } as userMod);
     });
     afterAll(async () => {
-      const user = await users.delete({
-        id: '1',
+      const delete_u = await users.delete({
+        id: create_u.id,
         password: '',
       });
     });
     it('User authentication', async () => {
-      const user_auth = await users.authenticate({
+      const auth_user = await users.authenticate({
         first_name: 'Amin',
         last_name: 'Wassef',
         password: 'qwe',
       } as userMod);
-      expect(user_auth?.first_name).toBe('Amin');
-      expect(user_auth?.last_name).toBe('Wassef');
+      expect(auth_user?.id).toBe(create_u.id);
+      expect(auth_user?.first_name).toBe('Amin');
+      expect(auth_user?.last_name).toBe('Wassef');
     });
     it('User authentication failed', async () => {
-      const user_auth = await users.authenticate({
+      const auth_user = await users.authenticate({
         first_name: 'Amin',
         last_name: 'Wassef',
         password: 'wrong password',
       } as userMod);
-      expect(user_auth).toBe(null);
+      expect(auth_user).toBe(null);
     });
+
+    let create_user: userMod;
+
     it('Create new user', async () => {
-      const user_create = await users.create({
+      create_user = await users.create({
         first_name: 'Daniel',
         last_name: 'Wassef',
         password: 'asd',
-      } as userMod);
-      expect(user_create.first_name).toBe('Daniel');
-      expect(user_create.last_name).toBe('Wassef');
+      });
+      expect(create_user.first_name).toBe('Daniel');
+      expect(create_user.last_name).toBe('Wassef');
     });
     it('Show all users data', async () => {
-      const all_users_show = await users.s_all();
-      expect(all_users_show.length).toBe(2);
+      const show_all_users = await users.s_all();
+      expect(show_all_users).toContain(create_user);
+    });
+    it('Show specific user data', async () => {
+      const show_specific_user = await users.s_one({
+        id: create_user.id,
+        password: '',
+      } as userMod);
+      expect(show_specific_user.id).toBe(create_user.id);
+      expect(show_specific_user.first_name).toBe(create_user.first_name);
+      expect(show_specific_user.last_name).toBe(create_user.last_name);
+    });
+    it(`Update user's data`, async () => {
+      const up_user = await users.up_user({
+        id: create_user.id,
+        first_name: 'daniel',
+        last_name: 'wassef',
+        password: 'asd',
+      } as userMod);
+      expect(up_user.id).toBe(create_user.id);
+      expect(up_user.first_name).toBe('daniel');
+      expect(up_user.last_name).toBe('wassef');
+    });
+    it(`Delete user`, async () => {
+      const delete_user = await users.delete({
+        id: create_user.id,
+        password: '',
+      } as userMod);
+      expect(delete_user.id).toBe(create_user.id);
+      expect(delete_user.first_name).toBe('daniel');
+      expect(delete_user.last_name).toBe('wassef');
     });
   });
 });

@@ -11,7 +11,6 @@ type payload = {
     id: number;
     user_name: string;
     e_mail: string;
-    password: string;
   };
   iat: number;
 };

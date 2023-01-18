@@ -63,6 +63,8 @@ export class Orders {
   async delete(o: orderMod): Promise<orderMod> {
     try {
       const connection = await client.connect();
+      const restart_id = `ALTER SEQUENCE orders_id_seq RESTART WITH 1`;
+      const restart = await connection.query(restart_id);
       const sql = `DELETE FROM orders WHERE id=($1) AND user_id = ($2) RETURNING *`;
       const result = await connection.query(sql, [o.id, o.user_id]);
       connection.release();
@@ -162,6 +164,8 @@ export class Orders {
   ): Promise<orderMod> {
     try {
       const connection = await client.connect();
+      const restart_id = `ALTER SEQUENCE orders_products_id_seq RESTART WITH 1`;
+      const restart = await connection.query(restart_id);
       const sql =
         'DELETE FROM orders_products WHERE id = ($1) AND order_id = ($2) RETURNING *';
       const result = await connection.query(sql, [op_id, order_id]);

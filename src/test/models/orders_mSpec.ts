@@ -46,8 +46,12 @@ describe('Orders model testing', () => {
       create_user = await users.create({
         first_name: 'Arsany',
         last_name: 'Joseph',
-        password: 'rty',
+        password: 'zxc',
       } as userMod);
+      const id = create_user.id;
+      const first_name = create_user.first_name;
+      const last_name = create_user.last_name;
+      console.log({ id, first_name, last_name });
     });
     afterAll(async () => {
       const delete_user = await users.delete({
@@ -55,7 +59,9 @@ describe('Orders model testing', () => {
         password: '',
       });
     });
+
     let create_order: orderMod;
+    
     it('Create new order', async () => {
       create_order = await orders.create({
         user_id: create_user.id,

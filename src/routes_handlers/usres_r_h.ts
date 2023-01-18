@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { userMod, Users } from '../models/users_m';
-import { super_admin_verifyAuthToken } from '../middlewares/authorizations/super_admin_authorization';
+import { super_admin_authorization } from '../middlewares/authorizations/super_admin_authorization';
+import { admin_super_admin_authorization } from '../middlewares/authorizations/admin_super_admin_authorization';
 import { user_super_admin_authorization } from '../middlewares/authorizations/user_super_admin_authorization';
 import jwt from 'jsonwebtoken';
 
@@ -17,10 +18,16 @@ const users = new Users();
 const create_u = async (req: Request, res: Response) => {
   try {
     const user = await users.create(req.body);
-    const token = jwt.sign({ user }, TOKEN_SECRET as unknown as string);
+    const id = user?.id;
+    const first_name = user?.first_name;
+    const last_name = user?.last_name;
+    const token = jwt.sign(
+      { user: { id, first_name, last_name } },
+      TOKEN_SECRET as unknown as string
+    );
     res.json(token);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 
@@ -30,7 +37,7 @@ const s_all_u = async (req: Request, res: Response) => {
     const user = await users.s_all();
     res.json(user);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 
@@ -44,7 +51,7 @@ const s_one_u = async (req: Request, res: Response) => {
     const user = await users.s_one(data);
     res.json(user);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 
@@ -60,7 +67,7 @@ const up_u = async (req: Request, res: Response) => {
     const user = await users.up_user(data);
     res.json(user);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 
@@ -74,7 +81,7 @@ const delete_u = async (req: Request, res: Response) => {
     const user = await users.delete(data);
     res.json(user);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 
@@ -82,19 +89,25 @@ const delete_u = async (req: Request, res: Response) => {
 const auth_u = async (req: Request, res: Response) => {
   try {
     const user = await users.authenticate(req.body);
-    const token = jwt.sign({ user }, TOKEN_SECRET as unknown as string);
+    const id = user?.id;
+    const first_name = user?.first_name;
+    const last_name = user?.last_name;
+    const token = jwt.sign(
+      { user: { id, first_name, last_name } },
+      TOKEN_SECRET as unknown as string
+    );
     res.json(token);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 
 const users_router = (app: express.Application) => {
   app.post('/users', create_u);
-  app.get('/users', super_admin_verifyAuthToken, s_all_u);
+  app.get('/users', admin_super_admin_authorization, s_all_u);
   app.get('/users/:id', user_super_admin_authorization, s_one_u);
   app.patch('/users/:id', user_super_admin_authorization, up_u);
-  app.delete('/users/:id', super_admin_verifyAuthToken, delete_u);
+  app.delete('/users/:id', super_admin_authorization, delete_u);
   app.post('/users/authenticate', auth_u);
 };
 

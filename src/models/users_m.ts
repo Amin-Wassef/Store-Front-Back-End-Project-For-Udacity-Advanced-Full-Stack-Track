@@ -89,6 +89,8 @@ export class Users {
   async delete(u: userMod): Promise<userMod> {
     try {
       const connection = await client.connect();
+      const restart_id = `ALTER SEQUENCE users_id_seq RESTART WITH 1`;
+      const restart = await connection.query(restart_id);
       const sql = `DELETE FROM users WHERE id = ($1) RETURNING *`;
       const result = await connection.query(sql, [u.id]);
       connection.release();
@@ -109,14 +111,14 @@ export class Users {
         const hased_password = result.rows[0].password;
         if (bcrypt.compareSync(u.password + BCRYPT_PASSWORD, hased_password)) {
           return result.rows[0];
+        } else {
+          throw new Error(`Password is not matching.`);
         }
       }
       connection.release();
       return null;
     } catch (error) {
-      throw new Error(
-        `Unable to sign in, user name or password is not matching. ${error}.`
-      );
+      throw new Error(`Unable to login. ${error}.`);
     }
   }
 }

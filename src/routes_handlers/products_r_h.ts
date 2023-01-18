@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { productMod, Products } from '../models/products_m';
-import { user_verifyAuthToken } from '../middlewares/authorizations/user_authorization';
+import { user_authorization } from '../middlewares/authorizations/user_authorization';
 import { admin_super_admin_authorization } from '../middlewares/authorizations/admin_super_admin_authorization';
 
 // Model instantiation
@@ -65,8 +65,8 @@ const delete_p = async (req: Request, res: Response) => {
 
 const products_router = (app: express.Application) => {
   app.post('/products', admin_super_admin_authorization, create_p);
-  app.get('/products', user_verifyAuthToken, s_all_p);
-  app.get('/products/:id', user_verifyAuthToken, s_one_p);
+  app.get('/products', user_authorization, s_all_p);
+  app.get('/products/:id', user_authorization, s_one_p);
   app.patch('/products/:id', admin_super_admin_authorization, up_p);
   app.delete('/products/:id', admin_super_admin_authorization, delete_p);
 };

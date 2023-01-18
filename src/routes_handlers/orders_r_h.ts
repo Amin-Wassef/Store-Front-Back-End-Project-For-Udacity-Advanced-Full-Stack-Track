@@ -10,12 +10,8 @@ const orders = new Orders();
 
 // Create new order end point
 const create_o = async (req: Request, res: Response) => {
-  const data: orderMod = {
-    user_id: req.body.id,
-    status: req.body.status,
-  };
   try {
-    const order = await orders.create(data);
+    const order = await orders.create(req.body);
     res.json(order);
   } catch (error) {
     res.status(400).send(`${error}`);
@@ -36,7 +32,7 @@ const s_all_o = async (req: Request, res: Response) => {
 const s_one_o = async (req: Request, res: Response) => {
   const data: orderMod = {
     id: req.params.order_id,
-    user_id: req.body.id,
+    user_id: req.body.user_id,
   };
   try {
     const order = await orders.s_one(data);
@@ -51,7 +47,7 @@ const up_o = async (req: Request, res: Response) => {
   const data: orderMod = {
     status: req.body.status,
     id: req.params.order_id,
-    user_id: req.body.id,
+    user_id: req.body.user_id,
   };
   try {
     const order = await orders.up_status(data);
@@ -65,7 +61,7 @@ const up_o = async (req: Request, res: Response) => {
 const delete_o = async (req: Request, res: Response) => {
   const data: orderMod = {
     id: req.params.order_id,
-    user_id: req.body.id,
+    user_id: req.body.user_id,
   };
   try {
     const order = await orders.delete(data);
@@ -80,9 +76,15 @@ const add_op = async (req: Request, res: Response) => {
   const order_id: string = req.params.order_id;
   const pdt_id: number = req.body.pdt_id;
   const quantity: number = req.body.quantity;
+  const user_id: string | number = req.body.user_id;
 
   try {
-    const order_product = await orders.add_pdt(order_id, pdt_id, quantity);
+    const order_product = await orders.add_pdt(
+      order_id,
+      pdt_id,
+      quantity,
+      user_id
+    );
     res.json(order_product);
   } catch (error) {
     res.status(400).send(`${error}`);
@@ -91,8 +93,9 @@ const add_op = async (req: Request, res: Response) => {
 
 // Show all orders' products and quantities end point
 const s_all_op = async (req: Request, res: Response) => {
+  const user_id: string | number = req.body.user_id;
   try {
-    const order_product = await orders.s_all_op();
+    const order_product = await orders.s_all_op(user_id);
     res.json(order_product);
   } catch (error) {
     res.status(400).send(`${error}`);
@@ -103,8 +106,9 @@ const s_all_op = async (req: Request, res: Response) => {
 const s_one_op = async (req: Request, res: Response) => {
   const op_id: string = req.params.op_id;
   const order_id: string = req.params.order_id;
+  const user_id: string | number = req.body.user_id;
   try {
-    const order_product = await orders.s_one_op(op_id, order_id);
+    const order_product = await orders.s_one_op(op_id, order_id, user_id);
     res.json(order_product);
   } catch (error) {
     res.status(400).send(`${error}`);
@@ -116,9 +120,15 @@ const up_op = async (req: Request, res: Response) => {
   const order_id: string = req.params.order_id;
   const op_id: string = req.params.op_id;
   const quantity: number = req.body.quantity;
+  const user_id: string | number = req.body.user_id;
 
   try {
-    const order_product = await orders.up_pdt_q(quantity, op_id, order_id);
+    const order_product = await orders.up_pdt_q(
+      quantity,
+      op_id,
+      order_id,
+      user_id
+    );
     res.json(order_product);
   } catch (error) {
     res.status(400).send(`${error}`);
@@ -129,9 +139,10 @@ const up_op = async (req: Request, res: Response) => {
 const delete_op = async (req: Request, res: Response) => {
   const order_id: string = req.params.order_id;
   const op_id: string = req.params.op_id;
+  const user_id: string | number = req.body.user_id;
 
   try {
-    const order_product = await orders.delete_pdt(op_id, order_id);
+    const order_product = await orders.delete_pdt(op_id, order_id, user_id);
     res.json(order_product);
   } catch (error) {
     res.status(400).send(`${error}`);

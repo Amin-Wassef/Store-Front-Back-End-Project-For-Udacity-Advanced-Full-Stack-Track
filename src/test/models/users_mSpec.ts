@@ -33,6 +33,10 @@ describe('Users model testing', () => {
         last_name: 'Wassef',
         password: 'qwe',
       } as userMod);
+      const id = create_u.id;
+      const first_name = create_u.first_name;
+      const last_name = create_u.last_name;
+      console.log({ id, first_name, last_name });
     });
     afterAll(async () => {
       const delete_u = await users.delete({
@@ -52,11 +56,11 @@ describe('Users model testing', () => {
     });
     it('User authentication failed', async () => {
       const auth_user = await users.authenticate({
-        first_name: 'Amin',
+        first_name: 'wrong first_name',
         last_name: 'Wassef',
-        password: 'wrong password',
+        password: 'qwe',
       } as userMod);
-      expect(auth_user).toBe(null);
+      expect(auth_user).toBeNull;
     });
 
     let create_user: userMod;
@@ -67,6 +71,10 @@ describe('Users model testing', () => {
         last_name: 'Wassef',
         password: 'asd',
       });
+      const id = create_user.id;
+      const first_name = create_user.first_name;
+      const last_name = create_user.last_name;
+      console.log({ id, first_name, last_name });
       expect(create_user.first_name).toBe('Daniel');
       expect(create_user.last_name).toBe('Wassef');
     });

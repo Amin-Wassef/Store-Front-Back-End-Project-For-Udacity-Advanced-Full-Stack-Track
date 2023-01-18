@@ -11,13 +11,12 @@ type payload = {
     id: number;
     user_name: string;
     e_mail: string;
-    password: string;
   };
   iat: number;
 };
 
 // For for a real app in real life
-export const super_admin_verifyAuthToken = (
+export const super_admin_authorization = (
   req: Request,
   res: Response,
   next: NextFunction
@@ -38,7 +37,7 @@ export const super_admin_verifyAuthToken = (
 };
 
 // For testing purpose (using token in the body)
-// export const super_admin_verifyAuthToken = (
+// export const super_admin_authorization = (
 //   req: Request,
 //   res: Response,
 //   next: NextFunction

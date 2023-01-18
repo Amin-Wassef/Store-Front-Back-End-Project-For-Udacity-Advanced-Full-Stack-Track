@@ -11,7 +11,6 @@ type payload = {
     id: number;
     user_name: string;
     e_mail: string;
-    password: string;
   };
   iat: number;
 };
@@ -30,10 +29,10 @@ export const user_super_admin_authorization = (
       TOKEN_SECRET as unknown as string
     ) as unknown as payload;
     console.log(decoded.user.id);
-    console.log(req.body.id);
+    console.log(req.body.user_id);
     if (
       decoded.user.id === parseInt(req.params.id) ||
-      decoded.user.id === req.body.id ||
+      decoded.user.id === req.body.user_id ||
       decoded.user.id === 1
     )
       next();

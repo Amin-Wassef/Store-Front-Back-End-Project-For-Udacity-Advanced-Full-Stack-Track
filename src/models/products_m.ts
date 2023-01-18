@@ -69,6 +69,8 @@ export class Products {
   async delete(p: productMod): Promise<productMod> {
     try {
       const connection = await client.connect();
+      const restart_id = `ALTER SEQUENCE products_id_seq RESTART WITH 1`;
+      const restart = await connection.query(restart_id);
       const sql = `DELETE FROM products WHERE id=($1) RETURNING *`;
       const result = await connection.query(sql, [p.id]);
       connection.release();

@@ -1,54 +1,96 @@
-# Storefront Backend Project
+Building A StoreFront Backend App [Uadcity advanced track second project]
 
-## Getting Started
 
-This repo contains a basic Node and Express app to get you started in constructing an API. To get started, clone this repo and run `yarn` in your terminal at the project root.
+Step One (project structuring):
 
-## Required Technologies
-Your application must make use of the following libraries:
-- Postgres for the database
-- Node/Express for the application logic
-- dotenv from npm for managing environment variables
-- db-migrate from npm for migrations
-- jsonwebtoken from npm for working with JWTs
-- jasmine from npm for testing
+As the project is build using typescript and server side node js then compiled to a dist folder, and needs using of prettier, eslint and testing using Jasmine, :
 
-## Steps to Completion
+- Creating src folder containing index.ts file for building localseerver and for the main directory.
 
-### 1. Plan to Meet Requirements
+- Inside the src folder also:
+    - Creating models folder containing:
+        - users_m.ts file for "users" table models.
+        - products_m.ts file for "products" table models.
+        - orders_m.ts file for "orders" & "orders_products" tables models.
 
-In this repo there is a `REQUIREMENTS.md` document which outlines what this API needs to supply for the frontend, as well as the agreed upon data shapes to be passed between front and backend. This is much like a document you might come across in real life when building or extending an API. 
+    - Creating routes_handlers folder containing:
+        - users_r_h.ts file for "users" table handlers and routes.
+        - products_r_h.ts file for "products" table handlers and routes.
+        - orders_r_h.ts file for "orders" & "orders_products" tables handlers and routes.
 
-Your first task is to read the requirements and update the document with the following:
-- Determine the RESTful route for each endpoint listed. Add the RESTful route and HTTP verb to the document so that the frontend developer can begin to build their fetch requests.    
-**Example**: A SHOW route: 'blogs/:id' [GET] 
+    - Creating middleware folder containing:
+        - authiorizations folder for handeling:
+            - super admin authorizations.
+            - admin authorizations.
+            - users authorizations.
+        - checking folder for:
+            - checking orders presence & activity.
+            - checking { user - order } matching.
 
-- Design the Postgres database tables based off the data shape requirements. Add to the requirements document the database tables and columns being sure to mark foreign keys.   
-**Example**: You can format this however you like but these types of information should be provided
-Table: Books (id:varchar, title:varchar, author:varchar, published_year:varchar, publisher_id:string[foreign key to publishers table], pages:number)
+    - Creating tests folder conatining:
+        - indexSpec.ts file for testing index.ts codes.
+        - models folder containing:
+            - users_mSpec.ts file for testing users table models.
+            - products_mSpec.ts file for testing products table models.
+            - orders_products_mSpec.ts file for testing orders_products table models.
+        - routes_handlers folder containing:
+            - users_r_hSpec.ts file for testing users table end points.
+            - products_r_hSpec.ts file for testing products table end points.
+            - orders_products_r_hSpec.ts file for testing orders_products table end points.
+        - helpers folder containing reportes.ts file with its congigurations.
 
-**NOTE** It is important to remember that there might not be a one to one ratio between data shapes and database tables. Data shapes only outline the structure of objects being passed between frontend and API, the database may need multiple tables to store a single shape. 
+- Creating spec folder containing support folder containing jasmine.jason file for directin jasmine to folders and files for testing.
 
-### 2.  DB Creation and Migrations
+- Creating .env file containing database secret data in the .gitignore file so you will find .env.example file to file in it to be able to run the app with an empty data base on your local copmuter.
 
-Now that you have the structure of the databse outlined, it is time to create the database and migrations. Add the npm packages dotenv and db-migrate that we used in the course and setup your Postgres database. If you get stuck, you can always revisit the database lesson for a reminder. 
 
-You must also ensure that any sensitive information is hashed with bcrypt. If any passwords are found in plain text in your application it will not pass.
+Step Two:
 
-### 3. Models
+- Running node to my app throught npm init and making config. also package.json file apeared.
+- Creating proper scripts needed in the package.json file:
+    - "dev": "nodemon src/index.ts",
+    - "build": "tsc",
+    - "js": "node dist/index.js",
+    - "jasmine": "jasmine",
+    - "start": "npm run build && npm run js",
+    - "test": "npx db-migrate reset --env test && set ENV=test&& npx db-migrate up --env test && npm run build && jasmine && npx db-migrate reset --env test",
+    - "prettier": "prettier --write src/**/*.ts",
+    - "lint": "eslint . --ext. ts"
+- Creating tsconfig.json file for typescript config. using npx tsc --init 
+- Installing needed dependencies and dev_dependencies and type definitions (as indicated in package.json file) from:
+    - npm i dependancy name (in dependencies)
+    - npm i --save-dev dependancy name (in dev_dependencies)
+    - npm i --save-dev type definition name (in dev_dependencies)
+- Creating .prettierrc, .eslintrc, .prettierignore, .eslintignore and .gitignore files for ignoring node_modules dist folders using echo {}> file name.
 
-Create the models for each database table. The methods in each model should map to the endpoints in `REQUIREMENTS.md`. Remember that these models should all have test suites and mocks.
 
-### 4. Express Handlers
+Step Three:
 
-Set up the Express handlers to route incoming requests to the correct model method. Make sure that the endpoints you create match up with the enpoints listed in `REQUIREMENTS.md`. Endpoints must have tests and be CORS enabled. 
+ - Building the server (as shown in index.ts file):
+    - importing express
+    - const app = express();
+    - Creating a port and listening on it on a local host.
+ - Creating the main api end point using get request. 
 
-### 5. JWTs
 
-Add JWT functionality as shown in the course. Make sure that JWTs are required for the routes listed in `REQUIUREMENTS.md`.
+Step Four:
 
-### 6. QA and `README.md`
+- Use => 'npm install' cmd to install all dependencies included in the app.
 
-Before submitting, make sure that your project is complete with a `README.md`. Your `README.md` must include instructions for setting up and running your project including how you setup, run, and connect to your database. 
+- To connect to database:
 
-Before submitting your project, spin it up and test each endpoint. If each one responds with data that matches the data shapes from the `REQUIREMENTS.md`, it is ready for submission!
+    - Create 2 empty databases on your computer using 'Postgres':
+        - pharmacy => to implement tables and data in it.
+        - pharmacy_test => to use it in testing purposes without affecting tables and data in 'pharmacy' database.
+
+    - Use => 'npx migrate-up' cmd to run schema migration so that 4 tables will be build in your database:
+        - users
+        - products
+        - orders
+        - orders_products
+
+            - NOTE: Relationships between tables and each table constraints you can find them in migration file in the migration folder.
+
+    - Use => 'npm run dev' cmd to run the server on your local host to be able to use the app.
+
+            - NOTE: Port used for this app => 5000.

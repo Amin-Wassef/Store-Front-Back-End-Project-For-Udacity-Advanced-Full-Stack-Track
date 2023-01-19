@@ -106,7 +106,7 @@ const s_all_op = async (req: Request, res: Response) => {
   }
 };
 
-// Show specific order's products and quantities
+// Show specific order's products and quantities end point
 const s_one_op = async (req: Request, res: Response) => {
   const op_id: string = req.params.op_id;
   const order_id: string = req.params.order_id;

@@ -7,7 +7,7 @@ const matching_check = async (
   next: NextFunction
 ): Promise<void> => {
   const order_id = req.params.order_id;
-  const id = req.body.id;
+  const id = req.body.user_id;
 
   try {
     const connection = await client.connect();
@@ -19,7 +19,7 @@ const matching_check = async (
     console.log(id);
 
     if (user_id != id) {
-      throw new Error(`You are not allowed to act to this order`);
+      throw new Error(`You are not allowed to act on this order`);
     }
     connection.release();
     next();

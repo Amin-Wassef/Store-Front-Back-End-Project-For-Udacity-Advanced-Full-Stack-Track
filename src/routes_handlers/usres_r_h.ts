@@ -31,7 +31,7 @@ const create_u = async (req: Request, res: Response) => {
   }
 };
 
-// Show all users data end point
+// Show all users' data end point
 const s_all_u = async (req: Request, res: Response) => {
   try {
     const user = await users.s_all();
@@ -41,12 +41,13 @@ const s_all_u = async (req: Request, res: Response) => {
   }
 };
 
-// Show specific user data end point
+// Show specific user's data end point
 const s_one_u = async (req: Request, res: Response) => {
   const data: userMod = {
     id: req.params.id,
     password: req.body.password,
   };
+
   try {
     const user = await users.s_one(data);
     res.json(user);
@@ -63,6 +64,7 @@ const up_u = async (req: Request, res: Response) => {
     last_name: req.body.last_name,
     password: req.body.password,
   };
+
   try {
     const user = await users.up_user(data);
     res.json(user);
@@ -77,6 +79,7 @@ const delete_u = async (req: Request, res: Response) => {
     id: req.params.id,
     password: req.body.password,
   };
+
   try {
     const user = await users.delete(data);
     res.json(user);

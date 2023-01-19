@@ -21,6 +21,7 @@ describe('Products model testing', () => {
       expect(products.delete).toBeDefined();
     });
   });
+  
   describe('Fuctions act properly', () => {
     let create_pdt: productMod;
 
@@ -32,11 +33,13 @@ describe('Products model testing', () => {
       expect(create_pdt.pdt_name).toBe('Augmentin 1g Tab');
       expect(create_pdt.pdt_price).toBe('90.25');
     });
-    it('Show all products data', async () => {
+
+    it(`Show all products' data`, async () => {
       const show_all_pdts = await products.s_all();
       expect(show_all_pdts.length).toBe(1);
     });
-    it('Show specific product data', async () => {
+
+    it(`Show specific product's data`, async () => {
       const show_specific_pdt = await products.s_one({
         id: create_pdt.id,
       } as productMod);
@@ -44,6 +47,7 @@ describe('Products model testing', () => {
       expect(show_specific_pdt.pdt_name).toBe(create_pdt.pdt_name);
       expect(show_specific_pdt.pdt_price).toBe(create_pdt.pdt_price);
     });
+
     it(`Update product's data`, async () => {
       const up_pdt = await products.up_pdt({
         id: create_pdt.id,
@@ -54,6 +58,7 @@ describe('Products model testing', () => {
       expect(up_pdt.pdt_name).toBe(create_pdt.pdt_name);
       expect(up_pdt.pdt_price).toBe('95.50');
     });
+
     it(`Delete product`, async () => {
       const delete_pdt = await products.delete({
         id: create_pdt.id,

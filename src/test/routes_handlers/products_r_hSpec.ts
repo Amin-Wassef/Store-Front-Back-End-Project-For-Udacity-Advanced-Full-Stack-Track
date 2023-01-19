@@ -24,6 +24,7 @@ describe('Products end points testing', () => {
     const last_name = create_user.last_name;
     console.log({ id, first_name, last_name });
   });
+
   afterAll(async () => {
     const delete_user = await users.delete({
       id: create_user.id,
@@ -55,30 +56,46 @@ describe('Products end points testing', () => {
     id = response.body.id;
     console.log(id);
   });
-  it(`Show all products data`, async () => {
+
+  it(`Create new product failed`, async () => {
+    const response = await request
+      .post('/products')
+      .send({
+        pdt_name: 'Augmentine 1g Tab',
+        pdt_price: 90.25,
+      } as productMod)
+      .set('Authorization', `Bearer wrongToken`);
+    expect(response.status).toBe(401);
+  });
+
+  it(`Show all products' data`, async () => {
     const response = await request
       .get('/products')
       .set('Authorization', `Bearer ${token}`);
     expect(response.status).toBe(200);
   });
-  it(`Show all products data failed`, async () => {
+
+  it(`Show all products' data failed`, async () => {
     const response = await request
       .get('/products')
       .set('Authorization', `Bearer wrongToken`);
     expect(response.status).toBe(401);
   });
-  it(`Show specific product data`, async () => {
+
+  it(`Show specific product's data`, async () => {
     const response = await request
       .get(`/products/${id}`)
       .set('Authorization', `Bearer ${token}`);
     expect(response.status).toBe(200);
   });
-  it(`Show specific product data failed`, async () => {
+
+  it(`Show specific product's data failed`, async () => {
     const response = await request
       .get(`/products/${id}`)
       .set('Authorization', `Bearer wrongToken`);
     expect(response.status).toBe(401);
   });
+
   it(`Update product's data`, async () => {
     const response = await request
       .patch(`/products/${id}`)
@@ -89,6 +106,7 @@ describe('Products end points testing', () => {
       .set('Authorization', `Bearer ${token}`);
     expect(response.status).toBe(200);
   });
+
   it(`Update product's data failed`, async () => {
     const response = await request
       .patch(`/products/${id}`)
@@ -99,12 +117,14 @@ describe('Products end points testing', () => {
       .set('Authorization', `Bearer wrongToken`);
     expect(response.status).toBe(401);
   });
+
   it(`Delete product failed`, async () => {
     const response = await request
       .delete(`/products/${id}`)
       .set('Authorization', `Bearer wrongToken`);
     expect(response.status).toBe(401);
   });
+
   it(`Delete product`, async () => {
     const response = await request
       .delete(`/products/${id}`)

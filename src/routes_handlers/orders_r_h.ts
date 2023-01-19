@@ -14,17 +14,17 @@ const create_o = async (req: Request, res: Response) => {
     const order = await orders.create(req.body);
     res.json(order);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 
-// Show all orders data end point
+// Show all orders' data end point
 const s_all_o = async (req: Request, res: Response) => {
   try {
     const order = await orders.s_all();
     res.json(order);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 
@@ -34,11 +34,12 @@ const s_one_o = async (req: Request, res: Response) => {
     id: req.params.order_id,
     user_id: req.body.user_id,
   };
+
   try {
     const order = await orders.s_one(data);
     res.json(order);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 
@@ -49,11 +50,12 @@ const up_o = async (req: Request, res: Response) => {
     id: req.params.order_id,
     user_id: req.body.user_id,
   };
+
   try {
     const order = await orders.up_status(data);
     res.json(order);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 
@@ -63,11 +65,12 @@ const delete_o = async (req: Request, res: Response) => {
     id: req.params.order_id,
     user_id: req.body.user_id,
   };
+
   try {
     const order = await orders.delete(data);
     res.json(order);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 
@@ -87,18 +90,19 @@ const add_op = async (req: Request, res: Response) => {
     );
     res.json(order_product);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 
 // Show all orders' products and quantities end point
 const s_all_op = async (req: Request, res: Response) => {
   const user_id: string | number = req.body.user_id;
+
   try {
     const order_product = await orders.s_all_op(user_id);
     res.json(order_product);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 
@@ -107,15 +111,16 @@ const s_one_op = async (req: Request, res: Response) => {
   const op_id: string = req.params.op_id;
   const order_id: string = req.params.order_id;
   const user_id: string | number = req.body.user_id;
+
   try {
     const order_product = await orders.s_one_op(op_id, order_id, user_id);
     res.json(order_product);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 
-// Update product quantities
+// Update product's quantities
 const up_op = async (req: Request, res: Response) => {
   const order_id: string = req.params.order_id;
   const op_id: string = req.params.op_id;
@@ -131,7 +136,7 @@ const up_op = async (req: Request, res: Response) => {
     );
     res.json(order_product);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 
@@ -145,7 +150,7 @@ const delete_op = async (req: Request, res: Response) => {
     const order_product = await orders.delete_pdt(op_id, order_id, user_id);
     res.json(order_product);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 

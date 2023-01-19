@@ -24,6 +24,7 @@ describe('Users model testing', () => {
       expect(users.delete).toBeDefined();
     });
   });
+
   describe('Fuctions act properly', () => {
     let create_u: userMod;
 
@@ -38,12 +39,14 @@ describe('Users model testing', () => {
       const last_name = create_u.last_name;
       console.log({ id, first_name, last_name });
     });
+
     afterAll(async () => {
       const delete_u = await users.delete({
         id: create_u.id,
         password: '',
       });
     });
+
     it('User authentication', async () => {
       const auth_user = await users.authenticate({
         first_name: 'Amin',
@@ -54,6 +57,7 @@ describe('Users model testing', () => {
       expect(auth_user?.first_name).toBe('Amin');
       expect(auth_user?.last_name).toBe('Wassef');
     });
+
     it('User authentication failed', async () => {
       const auth_user = await users.authenticate({
         first_name: 'wrong first_name',
@@ -78,11 +82,13 @@ describe('Users model testing', () => {
       expect(create_user.first_name).toBe('Daniel');
       expect(create_user.last_name).toBe('Wassef');
     });
-    it('Show all users data', async () => {
+
+    it(`Show all users' data`, async () => {
       const show_all_users = await users.s_all();
       expect(show_all_users).toContain(create_user);
     });
-    it('Show specific user data', async () => {
+
+    it(`Show specific user's data`, async () => {
       const show_specific_user = await users.s_one({
         id: create_user.id,
         password: '',
@@ -91,6 +97,7 @@ describe('Users model testing', () => {
       expect(show_specific_user.first_name).toBe(create_user.first_name);
       expect(show_specific_user.last_name).toBe(create_user.last_name);
     });
+
     it(`Update user's data`, async () => {
       const up_user = await users.up_user({
         id: create_user.id,
@@ -102,6 +109,7 @@ describe('Users model testing', () => {
       expect(up_user.first_name).toBe('daniel');
       expect(up_user.last_name).toBe('wassef');
     });
+
     it(`Delete user`, async () => {
       const delete_user = await users.delete({
         id: create_user.id,

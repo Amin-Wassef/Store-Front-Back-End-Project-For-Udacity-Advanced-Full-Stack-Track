@@ -22,7 +22,7 @@ export class Products {
     }
   }
 
-  // Show all products data
+  // Show all products' data
   async s_all(): Promise<productMod[]> {
     try {
       const connection = await client.connect();
@@ -35,7 +35,7 @@ export class Products {
     }
   }
 
-  // Sow specific product data
+  // Sow specific product's data
   async s_one(p: productMod): Promise<productMod> {
     try {
       const connection = await client.connect();

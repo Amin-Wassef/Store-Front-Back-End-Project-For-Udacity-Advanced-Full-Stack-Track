@@ -28,6 +28,7 @@ describe('Users end points testing', () => {
     const last_name = create_user.last_name;
     console.log({ id, first_name, last_name });
   });
+
   afterAll(async () => {
     const delete_user = await users.delete({
       id: create_user.id,
@@ -44,6 +45,7 @@ describe('Users end points testing', () => {
     expect(response.status).toBe(200);
     Mina_token = JSON.parse(response.text);
   });
+
   it('User authentication failed', async () => {
     const response = await request.post('/users/authenticate').send({
       first_name: 'Mina',
@@ -74,30 +76,35 @@ describe('Users end points testing', () => {
     user_id = decoded.user.id;
     console.log(decoded.user);
   });
-  it(`Show all users data`, async () => {
+
+  it(`Show all users' data`, async () => {
     const response = await request
       .get('/users')
       .set('Authorization', `Bearer ${token}`);
     expect(response.status).toBe(200);
   });
-  it(`Show all users data failed`, async () => {
+
+  it(`Show all users' data failed`, async () => {
     const response = await request
       .get('/users')
       .set('Authorization', `Bearer wrongToken`);
     expect(response.status).toBe(401);
   });
-  it(`Show specific user data`, async () => {
+
+  it(`Show specific user's data`, async () => {
     const response = await request
       .get(`/users/${user_id}`)
       .set('Authorization', `Bearer ${token}`);
     expect(response.status).toBe(200);
   });
-  it(`Show specific user data failed`, async () => {
+
+  it(`Show specific user's data failed`, async () => {
     const response = await request
       .get(`/users/${user_id}`)
       .set('Authorization', `Bearer wrongToken`);
     expect(response.status).toBe(401);
   });
+
   it(`Update user's data`, async () => {
     const response = await request
       .patch(`/users/${user_id}`)
@@ -109,6 +116,7 @@ describe('Users end points testing', () => {
       .set('Authorization', `Bearer ${token}`);
     expect(response.status).toBe(200);
   });
+
   it(`Update user's data failed`, async () => {
     const response = await request
       .patch(`/users/${user_id}`)
@@ -120,12 +128,14 @@ describe('Users end points testing', () => {
       .set('Authorization', `Bearer wrongToken`);
     expect(response.status).toBe(401);
   });
+
   it(`Delete user failed`, async () => {
     const response = await request
       .delete(`/users/${user_id}`)
       .set('Authorization', `Bearer wrongToken`);
     expect(response.status).toBe(401);
   });
+
   it(`Delete user`, async () => {
     const response = await request
       .delete(`/users/${user_id}`)

@@ -12,28 +12,29 @@ const create_p = async (req: Request, res: Response) => {
     const product = await products.create(req.body);
     res.json(product);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 
-// Show all products data end point
+// Show all products' data end point
 const s_all_p = async (req: Request, res: Response) => {
   try {
     const product = await products.s_all();
     res.json(product);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 
 // Show specific product's data end point
 const s_one_p = async (req: Request, res: Response) => {
   const id: productMod = { id: req.params.id };
+
   try {
     const product = await products.s_one(id);
     res.json(product);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 
@@ -44,22 +45,24 @@ const up_p = async (req: Request, res: Response) => {
     pdt_name: req.body.pdt_name,
     pdt_price: req.body.pdt_price,
   };
+
   try {
     const product = await products.up_pdt(data);
     res.json(product);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 
 // Delete product end point
 const delete_p = async (req: Request, res: Response) => {
   const id: productMod = { id: req.params.id };
+
   try {
     const product = await products.delete(id);
     res.json(product);
   } catch (error) {
-    res.status(400).send(`${error}`);
+    res.status(401).send(`${error}`);
   }
 };
 

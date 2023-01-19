@@ -20,7 +20,7 @@ export class Orders {
     }
   }
 
-  // Show all orders data
+  // Show all orders' data
   async s_all(): Promise<orderMod[]> {
     try {
       const connection = await client.connect();
@@ -123,7 +123,7 @@ export class Orders {
     try {
       const connection = await client.connect();
       const sql =
-        'SELECT * FROM orders_products WHERE id = ($1)) AND order_id = ($2)';
+        'SELECT * FROM orders_products WHERE id = ($1) AND order_id = ($2)';
       const result = await connection.query(sql, [op_id, order_id]);
       if (!result.rows.length) {
         throw new Error(`${op_id} does not exist`);
@@ -135,7 +135,7 @@ export class Orders {
     }
   }
 
-  // Update product quantities
+  // Update product's quantities
   async up_pdt_q(
     quantity: string | number,
     op_id: string | number,

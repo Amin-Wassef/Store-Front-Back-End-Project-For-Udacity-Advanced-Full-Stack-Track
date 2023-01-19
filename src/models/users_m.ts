@@ -37,7 +37,7 @@ export class Users {
     }
   }
 
-  // Show all users data
+  // Show all users' data
   async s_all(): Promise<userMod[]> {
     try {
       const connection = await client.connect();
@@ -50,7 +50,7 @@ export class Users {
     }
   }
 
-  // Show specific user data
+  // Show specific user's data
   async s_one(u: userMod): Promise<userMod> {
     try {
       const connection = await client.connect();
